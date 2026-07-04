@@ -1,0 +1,53 @@
+Repair & Cleanup
+
+Fix my PC ⟵ done
+Reinstall Windows ⟵ use systemreset.exe or shutdown /r /o into WinRE
+Clear Cache & Temp Files
+Clean Registry Keys ⟵ scour Win11Debloat GitHub for safe list + reg files !!
+Memory Manager !! ⟵ use psutil
+Deep Uninstall !!
+
+Performance & Optimization
+
+Update Drivers & Apps ⟵ winget upgrade --all
+Startup Time Booster ⟵ winreg on Run keys + schtasks
+Gaming Mode !! ⟵ psutil process list matched against hardcoded game names, psutil.Process.nice()
+Refresh Display Drivers ⟵ done
+Stress Test (WinSat) ⟵ winsat subprocess call
+WiFi Reset ⟵ done
+
+Windows Customization
+
+Enable EU Features !! ⟵ doing
+Windows Debloat !! ⟵ Win11Debloat GitHub, ship their .reg files as toggles with undo pairs
+Remove All Windows AI Features ⟵ Win11Debloat GitHub, same .reg toggle approach
+Actually Autosave (Office) !! ⟵ interval mode: pyautogui.hotkey('ctrl','s') on timer, aggressive mode: watch ~$ temp file mtime with os.path.getmtime
+Find Similar Files !! ⟵ difflib.SequenceMatcher on filenames, group by similarity score
+
+File Management
+
+Downloads & Desktop Organizer !! ⟵ os/shutil + extension-to-folder mapping
+Bulk File Rename ⟵ regex pattern based os.rename loop
+Local File Converter ⟵ FFmpeg subprocess wrapper
+FFmpeg GUI ⟵ dropdown UI → FFmpeg subprocess
+HyprImage ⟵ Pillow wrapper with action picker
+
+Productivity Tools
+
+Voice Typing ⟵ speech_recognition + pyautogui to paste output
+OCR: Image to Text ⟵ pytesseract or easyocr
+Pretend to Type ⟵ pyautogui.typewrite() with interval, probably fold into Macro Creator
+Macro Creator ⟵ record: keyboard lib + pyautogui polling, playback: screen color check before each click
+HyprSearch !! ⟵ global hotkey via keyboard lib, fuzzy file search via os.walk + difflib
+Terminal Command Generator ⟵ dropdown UI → command string builder
+Colorpicker ⟵ pyautogui.pixel() grab + magnifier overlay
+
+Extras & Fun
+
+Hyprclicker ⟵ done (existing autoclicker)
+Mouse Wraparound ⟵ done
+Image to ASCII ⟵ same approach as Bad Apple project
+Camera to ASCII (Virtual Cam) ⟵ OpenCV capture → ASCII render → OBS virtual cam, hardest feature overall
+Desktop Pet !! ⟵ transparent tkinter window + sprite animation, WS_EX_LAYERED for click-through
+Fake Update Screen ⟵ fullscreen tkinter canvas + fake progress bar
+Fake Error Screen ⟵ same, BSOD-style overlay
