@@ -22,13 +22,12 @@ Enhance and Organize:
 
 Tools and Utilities:
   -Mouse Wraparound											done
-  -Terminal command generator with dropdowns
+  -Terminal command generator with dropdowns    done
   -Hyprclickr, will just use my autocliker								done
   -Colorpicker
   -HyprSearch - spotlight search / command pallete like
   -Macro creator
-  -FFmpeg gui
-  -Local file converter uses ffmpeg
+  -Local file converter uses ffmpeg   done
   -HyprImage - quickly do actions with photos (PIL wrapper)
   -Bulk file rename
   -Voice typing of my own
@@ -38,7 +37,6 @@ Tools and Utilities:
 
 Fun:
   -Image to ascii done
-  -Desktop pet (alan stick figs, nyan cat or more!)
-  -Fake updating screen
+  -Fake updating screen          done
   -Fake error screen											done
   -Camera to ASCII video make virtual camera u can switch to done
