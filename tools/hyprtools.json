@@ -1,0 +1,11 @@
+{
+  "actuallyautosave": {
+    "delay": 120
+  },
+  "webapps": [],
+  "settings": {
+    "launch_width": 1100,
+    "launch_height": 700,
+    "dark_mode": true
+  }
+}

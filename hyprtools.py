@@ -2,7 +2,6 @@ import subprocess
 import ctypes
 import sys
 import pyautogui as mouse
-mouse.FAILSAFE = False
 from time import sleep
 
 if not ctypes.windll.shell32.IsUserAnAdmin():
@@ -16,20 +15,13 @@ def run_cmd(command):
     return result.stdout, result.stderr
 
 def fix_my_pc():
-    print("Fixing PC")
     process = subprocess.Popen(
         'DISM /Online /Cleanup-Image /RestoreHealth',
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         encoding='utf-8', shell=True
     )
-    for line in process.stdout: #type: ignore
-        print(line, end='')
-
-    print(" ")
     run_cmd('sfc /scannow')
-    print("SFC done!")
-    
-    print("Done!")
+
 
 
 
@@ -59,7 +51,7 @@ def delete_temp():
 
 
 def update_all():
-    out, err= run_cmd('winget upgrade --all')
+    out, err= run_cmd('winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements')
     print(out or err)
 
 
@@ -71,6 +63,5 @@ def wifi_reset():
     print(out or err)
 
 
-update_all()
 
 

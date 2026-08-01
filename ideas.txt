@@ -1,42 +1,40 @@
 Features Include: (!! = personal favourite)
 
 Repair:
-  -One click "Fix my PC" button !!									done
-  -One click tool to update drivers and applications							done
-  -Clear all apps cache and `%temp%` files								done
-
-  -WIFI reset												done
-  -Refresh display drivers										done
-  -Memory manager (remove extra unnecessary processes) !!
-  -Stress test ur PC (winsat)										done
+  -One click "Fix my PC" button !!									        done
+  -One click tool to update drivers and applications				done
+  -Clear all apps cache and `%temp%` files								  done
+  -WIFI reset												                        done
+  -Refresh display drivers										              done
+  -Memory manager (remove extra unnecessary processes) !!   
+  -Stress test ur PC (winsat)										            done
 
 Enhance and Organize:
   -Downloads and Desktop organizer by Filename !!
   -Startup time booster					
   -Deep uninstall (Revo like) !!
-  -Actually autosave for MS office (does not require OneDrive to save) !! done
+  -Actually autosave for MS office (does not require OneDrive to save) !!             done
   -Gaming mode, scan ur apps list and put higher cpu priority on recognised games  
-  -Find similar files: if u have files like solarproject.pptx, solarproject(1). pptx, EDITED solarproject.pptx, 
-   FINAL EDITED FINAL FINAL solarproject.pptx, will find and group them on desktop if asked
+  -Find similar files: if u have files like solarproject.pptx, solarproject(1). pptx, EDITED solarproject.pptx, FINAL EDITED FINAL FINAL solarproject.pptx, will find and group them on desktop if asked
+  -Hyprseqrch
   -Remove ALL WINDOWS AI FEATURES (use win11debloat on GitHub)
 
 Tools and Utilities:
-  -Mouse Wraparound											done
-  -Terminal command generator with dropdowns    done
-  -Hyprclickr, will just use my autocliker								done
-  -Colorpicker
-  -HyprSearch - spotlight search / command pallete like
-  -Macro creator
-  -Local file converter uses ffmpeg   done
-  -HyprImage - quickly do actions with photos (PIL wrapper)
+  -Mouse Wraparound											                                  done
+  -Terminal command generator with dropdowns                              done
+  -Hyprclickr, will just use my autocliker								                done
+  -Colorpicker                                                            done
+  -Local file converter uses ffmpeg                                       done
+  -HyprImage - quickly do actions with photos (PIL wrapper)               done
   -Bulk file rename
-  -Voice typing of my own
+  -Voice typing of my own                                                 done
   -Ocr wrapper: image to text
-  -Pretend to type out: just paste some text and a macro will type it (will prolly put it in macro creator)
+  -Pretend to type out: just paste some text and a macro will type it     done
+  -Web Apps: run websites as if they were apps                            done
 
 
 Fun:
-  -Image to ascii done
-  -Fake updating screen          done
-  -Fake error screen											done
-  -Camera to ASCII video make virtual camera u can switch to done
+  -Image to ascii                                               done
+  -Fake updating screen                                         done
+  -Fake error screen											                      done
+  -Camera to ASCII video make virtual camera u can switch to    done

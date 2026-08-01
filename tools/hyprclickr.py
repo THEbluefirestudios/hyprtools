@@ -69,7 +69,7 @@ def auto_click():
 
 win = tk.Tk() 
 win.geometry('380x220')
-win.title('HyprTools - HyprClickr')
+win.title('HyprClickr - HyprTools')
 
 
 ttk.Label(win, text="HyprClickr", font=('courier', 32, "bold")).pack(pady = 10)

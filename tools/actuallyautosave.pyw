@@ -5,12 +5,31 @@ import darkdetect
 import sys
 import sv_ttk
 import os
+import json
 
 system_theme = "dark" if darkdetect.isDark() else "light"
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(script_dir, "savedelay.txt")
+json_path = os.path.join(script_dir, "hyprtools.json")
 
 delay = 120
+
+
+def load_json():
+    if not os.path.exists(json_path):
+        return {}
+    with open(json_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def save_json(data):
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2)
+
+
+def load_delay():
+    global delay
+    data = load_json()
+    delay = data.get('actuallyautosave', {}).get('delay', 120)
 
 
 def pretty_time_formatting(rawseconds):
@@ -48,10 +67,15 @@ def on_slider_change(value):
 
 def save_delay():
     global delay
-    with open(file_path, 'w') as f:
-        f.write(str(delay))
+    data = load_json()
+    if 'actuallyautosave' not in data:
+        data['actuallyautosave'] = {}
+    data['actuallyautosave']['delay'] = delay
+    save_json(data)
     status_label.config(text=f"Saved: {pretty_time_formatting(delay)}")
 
+
+load_delay()
 
 win = tk.Tk()
 win.geometry('440x220')
@@ -61,7 +85,7 @@ ttk.Label(win, text="Change saving delay:", font=('Segoe UI', 12)).pack()
 status_label = ttk.Label(win, text=pretty_time_formatting(delay), font=('Segoe UI Variable', 10))
 scale = ttk.Scale(win, from_=30, to=600, orient='horizontal', command=on_slider_change)
 scale.set(delay)
-scale.pack(pady = 10)
+scale.pack(pady=10)
 
 
 status_label.pack()
