@@ -1,11 +1,23 @@
 {
-  "actuallyautosave": {
-    "delay": 120
-  },
-  "webapps": [],
-  "settings": {
-    "launch_width": 1100,
-    "launch_height": 700,
-    "dark_mode": true
-  }
+    "actuallyautosave": {
+        "delay": 120
+    },
+    "webapps": [],
+    "settings": {
+        "launch_width": 1100,
+        "launch_height": 700,
+        "dark_mode": true
+    },
+    "search_dirs": [
+        "C:\\Users\\BlueFireStudios",
+        "C:\\Users\\Public\\Public Documents",
+        "C:\\Users\\Public\\Public Downloads",
+        "C:\\Users\\Public\\Public Music",
+        "C:\\Users\\Public\\Public Videos",
+        "C:\\Users\\Public\\Public Pictures",
+        "D:\\",
+        "E:\\"
+    ],
+    "search_engine": "duckduckgo",
+    "do_engine_search": true
 }
