@@ -1,24 +1,22 @@
-# TODO LATER
-
-'''
 import sys
 import os
+import io
+import asyncio
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import sv_ttk
 import darkdetect
 from PIL import Image, ImageGrab, ImageTk
-import pytesseract
+from winsdk.windows.media.ocr import OcrEngine
+from winsdk.windows.graphics.imaging import BitmapDecoder
+from winsdk.windows.storage.streams import InMemoryRandomAccessStream, DataWriter
 
 try:
     import pywinstyles
 except ImportError:
     pywinstyles = None
 
-TESSERACT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tesseract", "tesseract.exe")
-if os.path.exists(TESSERACT_PATH):
-    pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
-# otherwise falls back to system PATH, works fine if user has tesseract installed normally
+#
 
 loadedimg = None
 
@@ -34,6 +32,29 @@ def apply_theme_to_titlebar(root):
         pywinstyles.apply_style(root, "dark" if sv_ttk.get_theme() == "dark" else "normal")  # type: ignore
         root.wm_attributes("-alpha", 0.99)
         root.wm_attributes("-alpha", 1)
+
+
+async def ocr_image_async(pil_img):
+    buf = io.BytesIO()
+    pil_img.save(buf, format='PNG')
+    data = buf.getvalue()
+
+    stream = InMemoryRandomAccessStream()
+    writer = DataWriter(stream.get_output_stream_at(0))
+    writer.write_bytes(bytearray(data))#type: ignore
+    await writer.store_async()
+    await writer.flush_async()
+    stream.seek(0)
+
+    decoder = await BitmapDecoder.create_async(stream)#type: ignore
+    bitmap = await decoder.get_software_bitmap_async()
+
+    engine = OcrEngine.try_create_from_user_profile_languages()
+    if engine is None:
+        raise RuntimeError("No OCR engine available")
+
+    result = await engine.recognize_async(bitmap)
+    return result.text
 
 
 win = tk.Tk()
@@ -90,8 +111,8 @@ def show_preview(img):
     scale = min(PREVW / iw, PREVH / ih)
     dispw = max(1, int(iw * scale))
     disph = max(1, int(ih * scale))
-    dispimg = ImageTk.PhotoImage(img.resize((dispw, disph), Image.LANCZOS))
-    canvas_1.dispimgref = dispimg  # keep alive
+    dispimg = ImageTk.PhotoImage(img.resize((dispw, disph), Image.LANCZOS)) #type: ignore
+    canvas_1.dispimgref = dispimg  #type: ignore
     offx = (PREVW - dispw) // 2
     offy = (PREVH - disph) // 2
     canvas_1.create_image(offx, offy, image=dispimg, anchor='nw')
@@ -104,7 +125,7 @@ def run_ocr():
     statusvar.set('Reading text...')
     win.update()
     try:
-        text = pytesseract.image_to_string(loadedimg)
+        text = asyncio.run(ocr_image_async(loadedimg))
         txt_out.delete('1.0', 'end')
         txt_out.insert('1.0', text.strip())
         statusvar.set('Done')
@@ -115,7 +136,7 @@ def run_ocr():
 
 def open_image():
     global loadedimg
-    p = filedialog.askopenfilename(filetypes=[("Images", "*.png *.jpg *.jpeg *.bmp *.webp")])
+    p = filedialog.askopenfilename(filetypes=[("Images", "*.png *.jpg *.jpeg *.bmp *.webp *.tiff *.tif")])
     if not p:
         return
     loadedimg = Image.open(p)
@@ -167,4 +188,4 @@ sv_ttk.set_theme(system_theme)
 if pywinstyles:
     apply_theme_to_titlebar(win)
 
-win.mainloop()'''
+win.mainloop()
