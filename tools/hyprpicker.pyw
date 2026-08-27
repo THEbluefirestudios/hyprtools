@@ -5,6 +5,8 @@ from tkinter import ttk
 from PIL import Image, ImageGrab, ImageTk, ImageDraw
 from pynput import keyboard
 import pystray
+import os
+BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 try:
     import win32clipboard
@@ -176,11 +178,8 @@ def spawn_picker():
 
 
 def make_tray_icon_image():
-    img = Image.new('RGB', (64, 64), '#1c1c1c')
-    draw = ImageDraw.Draw(img)
-    draw.ellipse((14, 10, 50, 46), fill='#ff6b6b')
-    draw.ellipse((22, 18, 42, 38), fill='#0078d4')
-    return img
+    icon_path = os.path.join(BASEDIR, 'hyprpicker.png')
+    return Image.open(icon_path).convert('RGBA')
 
 
 def quit_app(icon_ref=None, item=None):

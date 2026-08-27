@@ -6,27 +6,21 @@ Repair:
   -Clear all apps cache and `%temp%` files								  done
   -WIFI reset												                        done
   -Refresh display drivers										              done
-  -Memory manager (remove extra unnecessary processes) !!   
   -Stress test ur PC (winsat)										            done
 
 Enhance and Organize:
   -Downloads and Desktop organizer by Filename !!  done
   -Startup time booster					                done
-  -Deep uninstall (Revo like) !!
-  -Actually autosave for MS office (does not require OneDrive to save) !!             done
-  -Gaming mode, scan ur apps list and put higher cpu priority on recognised games     
-  -Find similar files: if u have files like solarproject.pptx, solarproject(1). pptx, EDITED solarproject.pptx, FINAL EDITED FINAL FINAL solarproject.pptx, will find and group them on desktop if asked
+  -Actually autosave for MS office (does not require OneDrive to save) !!             done   
   -Hyprseqrch                                                                                   done
   -Remove ALL WINDOWS AI FEATURES (use win11debloat on GitHub)
 
 Tools and Utilities:
-  -Mouse Wraparound											                                  done
   -Terminal command generator with dropdowns                              done
   -Hyprclickr, will just use my autocliker								                done
   -Colorpicker                                                            done
   -Local file converter uses ffmpeg                                       done
   -HyprImage - quickly do actions with photos (PIL wrapper)               done
-  -Bulk file rename
   -Voice typing of my own                                                 done
   -Ocr wrapper: image to text                                             done
   -Pretend to type out: just paste some text and a macro will type it     done

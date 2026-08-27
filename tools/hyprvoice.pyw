@@ -11,6 +11,8 @@ import speech_recognition as sr
 from pynput import keyboard
 from time import sleep
 import pystray
+import os
+BASEDIR = os.path.dirname(os.path.abspath(__file__))
 from PIL import Image, ImageDraw
 
 try:
@@ -195,11 +197,8 @@ class Tooltip:
 
 
 def make_tray_icon_image():
-    img = Image.new('RGB', (64, 64), '#1c1c1c')
-    draw = ImageDraw.Draw(img)
-    draw.ellipse((16, 8, 48, 40), fill='#0078d4')  
-    draw.rectangle((28, 40, 36, 52), fill='#0078d4') 
-    return img
+    icon_path = os.path.join(BASEDIR, 'hyprvoice.png')
+    return Image.open(icon_path).convert('RGBA')
 
 
 def quit_app(icon_ref=None, item=None):
@@ -341,4 +340,5 @@ sv_ttk.set_theme(system_theme)
 if pywinstyles:
     apply_theme_to_titlebar(win)#fallback for titlebar color on win10, pywinstyles is optional but recommended
 
+win.withdraw()
 win.mainloop()

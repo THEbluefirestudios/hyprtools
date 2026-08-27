@@ -1,100 +1,26 @@
-# pip install sv-ttk pywinstyles darkdetect
-import subprocess
-import sys
+import cv2
+from ascii_magic import AsciiArt
+from PIL import Image, ImageTk
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import ttk
 import sv_ttk
 import darkdetect
 import pywinstyles
+import sys
+import time
+from io import BytesIO
+# so i lost the original file, so i had to rewrite it from scratch, yea im not touching it again
+CAMERA_INDEX = 0
+COLUMNS = 80
+FPS = 15
+BG_COLOR = '#121212'
+FULL_COLOR = True
 
-#so the idea here is to just spam lists 
-
-cmds = [
-    'shutdown', 'echo', 'cd', 'ping', 'mkdir', 'del', 'copy', 'ipconfig',
-    'dir', 'cls', 'tasklist', 'taskkill', 'netstat', 'systeminfo',
-    'whoami', 'tree', 'xcopy', 'timeout', 'start', 'attrib',
-]
-
-cmdlabels = [ #for the boomers out there
-    'Shut down or restart', 'Display a message', 'Change folder', 'Ping a host',
-    'Make a new folder', 'Delete a file', 'Copy a file', 'Show network info',
-    'List folder contents', 'Clear the screen', 'List running programs',
-    'Close a program', 'Show network connections', 'Show system info',
-    'Show current user', 'Show folder tree', 'Copy a folder', 'Wait a bit',
-    'Open a program or file', 'Change file attributes',
-]
-
-cmdfmt = [#here i define num of params:)
-    'shutdown {0} /t {1}',
-    'echo {0}',
-    'cd {0}',
-    'ping {0} {1}',
-    'mkdir {0}',
-    'del {0}',
-    'copy {0} {1}',
-    'ipconfig',
-    'dir {0}',
-    'cls',
-    'tasklist',
-    'taskkill /im {0} {1}',
-    'netstat {0}',
-    'systeminfo',
-    'whoami',
-    'tree {0}',
-    'xcopy {0} {1} {2}',
-    'timeout {0}',
-    'start {0}',
-    'attrib {0} {1}',
-]
-
-params = [ #again, for the bommers out there
-    ['what to do', 'delay in seconds'],
-    ['message to display'],
-    ['folder to open'],
-    ['ping count', 'target host'],
-    ['new folder name'],
-    ['file to delete'],
-    ['source file', 'destination'],
-    [],
-    ['folder to list'],
-    [],
-    [],
-    ['process name', 'force close'],
-    ['flags'],
-    [],
-    [],
-    ['folder to show'],
-    ['source folder', 'destination', 'include subfolders'],
-    ['seconds to wait'],
-    ['program or file to open'],
-    ['file', 'attribute to set'],
-]
-
-paramvals = [
-    [[('shut the pc down', '/s'), ('restart the pc', '/r'), ('log off', '/l'), ('hibernate', '/h')], 'numinput'],
-    ['input'],
-    ['filepicker'],
-    ['numinput', 'input'],
-    ['input'],
-    ['filepicker'],
-    ['filepicker', 'filepicker'],
-    [],
-    ['filepicker'],
-    [],
-    [],
-    ['input', [('yes', '/f'), ('no', '')]],
-    [[('all connections', '-a'), ('with process names', '-b'), ('routing table', '-r')]],
-    [],
-    [],
-    ['filepicker'],
-    ['filepicker', 'filepicker', [('yes', '/e'), ('no', '')]],
-    ['numinput'],
-    ['filepicker'],
-    ['filepicker', [('read-only', '+r'), ('hidden', '+h'), ('remove read-only', '-r'), ('remove hidden', '-h')]],
-]
+system_theme = "dark" if darkdetect.isDark() else "light"
+cap = None
 
 
-def apply_theme_to_titlebar(root):#js copied from sv_ttk documentation
+def apply_theme_to_titlebar(root):
     version = sys.getwindowsversion()
     if version.major == 10 and version.build >= 22000:
         pywinstyles.change_header_color(root, "#1c1c1c" if sv_ttk.get_theme() == "dark" else "#fafafa")
@@ -104,156 +30,153 @@ def apply_theme_to_titlebar(root):#js copied from sv_ttk documentation
         root.wm_attributes("-alpha", 1)
 
 
-root = tk.Tk()
-root.title("Terminal command generator - Hyprtools")
-root.geometry("850x460")
+def get_bg_color():
+    val = scale_1.get()
+    hex_val = format(int(val), '02x')
+    return f"#{hex_val}{hex_val}{hex_val}"
 
-label_1 = ttk.Label(root, text="Terminal command generator", font=('Courier', 28, 'bold'))
+
+def start_camera():
+    global cap, COLUMNS, FPS, CAMERA_INDEX, BG_COLOR, FULL_COLOR
+    try:
+        COLUMNS = int(entry_1.get())
+    except ValueError:
+        COLUMNS = 80
+    try:
+        FPS = int(entry_2.get())
+    except ValueError:
+        FPS = 15
+    try:
+        CAMERA_INDEX = int(entry_3.get())
+    except ValueError:
+        CAMERA_INDEX = 0
+
+    BG_COLOR = get_bg_color()
+    FULL_COLOR = var_1.get()
+
+    cap = cv2.VideoCapture(CAMERA_INDEX)
+
+    frame_settings.pack_forget()
+    label_1.pack_forget()
+    win.geometry("640x360")
+    frame_cam.pack(expand=True, fill='both')
+    win.bind('<Escape>', stop_camera)
+
+    update()
+
+
+def stop_camera(event=None):
+    global cap
+    win.attributes('-fullscreen', False)
+    if cap:
+        cap.release()
+        cap = None
+    frame_cam.pack_forget()
+    label_1.pack(pady=10)
+    frame_settings.pack(expand=True, fill='both', padx=20, pady=10)
+
+
+def update():
+    global cap
+    if cap is None:
+        return
+
+    ret, frame = cap.read()
+    if not ret:
+        cap.release()
+        time.sleep(1)
+        cap = cv2.VideoCapture(CAMERA_INDEX, cv2.CAP_DSHOW)
+        win.after(100, update)
+        return
+
+    h, w = frame.shape[:2]
+    frame = cv2.resize(frame, (w, int(w * 9 / 16)))
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    pil_img = Image.fromarray(frame_rgb)
+
+    ascii_art = AsciiArt.from_pillow_image(pil_img)
+
+    buf = BytesIO()
+    ascii_art.to_image_file(buf, columns=COLUMNS, full_color=FULL_COLOR, monochrome=not FULL_COLOR, back=BG_COLOR)  # type: ignore
+    buf.seek(0)
+    ascii_pil = Image.open(buf)
+
+    win_w = frame_cam.winfo_width()
+    win_h = frame_cam.winfo_height()
+
+    if win_w > 1 and win_h > 1:
+        ascii_pil = ascii_pil.resize((win_w, win_h), Image.LANCZOS)  # type: ignore
+
+    img = ImageTk.PhotoImage(ascii_pil)
+    label_4.config(image=img)
+    label_4.image = img  # type: ignore
+
+    win.after(1000 // FPS, update)
+
+
+def on_close():
+    global cap
+    if cap:
+        cap.release()
+    win.destroy()
+
+
+win = tk.Tk()
+win.title("ASCII Camera - HyprTools")
+win.geometry("440x420")
+win.protocol("WM_DELETE_WINDOW", on_close)
+
+label_1 = ttk.Label(win, text="ASCII Camera", font=('Courier', 28, 'bold'))
 label_1.pack(pady=10)
 
-fr_top = ttk.Frame(root, padding=15)
-fr_top.pack(fill='x')
+frame_settings = ttk.Frame(win)
+frame_settings.pack(expand=True, fill='both', padx=20, pady=10)
 
-lbl_prevtitle = ttk.Label(fr_top, text="preview", font=("Courier", 12, "bold"))
-lbl_prevtitle.pack(anchor='w')
+frame_1 = ttk.Frame(frame_settings)
+frame_1.pack(pady=5)
+label_2 = ttk.Label(frame_1, text="Columns:", font=('Segoe UI Variable', 11))
+label_2.pack(side='left', padx=5)
+entry_1 = ttk.Entry(frame_1, width=8)
+entry_1.insert(0, str(COLUMNS))
+entry_1.pack(side='left')
 
-fr_previewbox = ttk.Frame(fr_top, relief='solid', borderwidth=1, padding=10)
-fr_previewbox.pack(fill='x', pady=5)
+frame_2 = ttk.Frame(frame_settings)
+frame_2.pack(pady=5)
+label_3 = ttk.Label(frame_2, text="FPS:", font=('Segoe UI Variable', 11))
+label_3.pack(side='left', padx=5)
+entry_2 = ttk.Entry(frame_2, width=8)
+entry_2.insert(0, str(FPS))
+entry_2.pack(side='left')
 
-var_preview = tk.StringVar(value='')
-lbl_preview = ttk.Label(fr_previewbox, textvariable=var_preview, font=("Consolas", 13), wraplength=780, justify='left', anchor='w')
-lbl_preview.pack(fill='x')
+frame_3 = ttk.Frame(frame_settings)
+frame_3.pack(pady=5)
+label_5 = ttk.Label(frame_3, text="Camera index:", font=('Segoe UI Variable', 11))
+label_5.pack(side='left', padx=5)
+entry_3 = ttk.Entry(frame_3, width=8)
+entry_3.insert(0, str(CAMERA_INDEX))
+entry_3.pack(side='left')
 
-fr_mid = ttk.Frame(root, padding=15)
-fr_mid.pack(fill='both', expand=True)
+label_7 = ttk.Label(frame_settings, text="Background color (Black → White)", font=('Segoe UI Variable', 10))
+label_7.pack()
+scale_1 = ttk.Scale(frame_settings, from_=0, to=255, orient='horizontal')
+scale_1.set(18)
+scale_1.pack(pady=2)
 
-fr_row = ttk.Frame(fr_mid)
-fr_row.pack(anchor='w')
+var_1 = tk.BooleanVar(value=True)
+check_1 = ttk.Checkbutton(frame_settings, text="Full color", variable=var_1)
+check_1.pack(pady=5)
 
-paramgetters = []
+btn_1 = ttk.Button(frame_settings, text="Start", style='Accent.TButton', command=start_camera)
+btn_1.pack(pady=10)
 
+label_6 = ttk.Label(frame_settings, text="On clicking 'start', open OBS Studio, set this window as a window capture source and click 'Start Virtual Camera', now enjoy your ASCII Camera anywhere by setting camera to 'OBS virtual camera' :3", font=('Segoe UI Variable', 8), wraplength=400, foreground="#535353", justify='center')
+label_6.pack(pady=5)
 
-def update_preview(*_):
-    sel = dd1.get()
-    if sel not in cmdlabels:
-        var_preview.set('')
-        return
-    idx = cmdlabels.index(sel)
-    vals = [g() for g in paramgetters]
-    try:
-        text = cmdfmt[idx].format(*vals)
-    except IndexError:
-        text = cmdfmt[idx]
-    var_preview.set(' '.join(text.split()))
+frame_cam = ttk.Frame(win)
+label_4 = ttk.Label(frame_cam)
+label_4.pack(expand=True, fill='both')
 
-
-def clear_params():
-    for w in fr_row.winfo_children()[1:]:
-        w.destroy()
-    paramgetters.clear()
-
-
-def make_dropdown_param(parent, options): #saves a lot of code!, just make dropdown from the list of params!
-    mapping = {d: v for d, v in options}
-    cb = ttk.Combobox(parent, values=list(mapping.keys()), state='readonly', width=18)
-    cb.current(0)
-    cb.bind('<<ComboboxSelected>>', update_preview)
-
-    def getter():
-        return mapping.get(cb.get(), '')
-    return cb, getter
-
-
-def make_input_param(parent):
-    ent = ttk.Entry(parent, width=20)
-    ent.bind('<KeyRelease>', update_preview)
-
-    def getter():
-        return ent.get()
-    return ent, getter
-
-
-def make_numinput_param(parent):
-    sb = ttk.Spinbox(parent, from_=0, to=9999, width=8, command=update_preview)
-    sb.set(0)
-    sb.bind('<KeyRelease>', update_preview)
-
-    def getter():
-        return sb.get()
-    return sb, getter
-
-
-def make_filepicker_param(parent):
-    pathvar = tk.StringVar(value='')
-
-    def pick():
-        p = filedialog.askopenfilename()
-        if p:
-            pathvar.set(p)
-            btn.configure(text=p.split('/')[-1])
-            update_preview()
-
-    btn = ttk.Button(parent, text="choose file", command=pick)
-
-    def getter():
-        return f'"{pathvar.get()}"' if pathvar.get() else ''
-    return btn, getter
-
-
-def on_cmd_select(event=None):
-    clear_params()
-    sel = dd1.get()
-    if sel not in cmdlabels:
-        update_preview()
-        return
-    idx = cmdlabels.index(sel)
-    for label, valtype in zip(params[idx], paramvals[idx]):
-        pfr = ttk.Frame(fr_row)
-        pfr.pack(side='left', padx=8)
-        ttk.Label(pfr, text=label, font=("Segoe UI Variable", 8)).pack(anchor='w')
-        if isinstance(valtype, list):
-            widget, getter = make_dropdown_param(pfr, valtype)
-        elif valtype == 'numinput':
-            widget, getter = make_numinput_param(pfr)
-        elif valtype == 'filepicker':
-            widget, getter = make_filepicker_param(pfr)
-        else:
-            widget, getter = make_input_param(pfr)
-        widget.pack()
-        paramgetters.append(getter)
-    update_preview()
-
-
-dd1 = ttk.Combobox(fr_row, values=cmdlabels, state='readonly', width=22, font=("Segoe UI Variable", 10))
-dd1.pack(side='left')
-dd1.bind('<<ComboboxSelected>>', on_cmd_select)
-
-fr_bot = ttk.Frame(root, padding=15)
-fr_bot.pack(fill='x', side='bottom')
-
-
-def copy_cmd():
-    root.clipboard_clear()
-    root.clipboard_append(var_preview.get())
-
-
-def run_cmd():
-    text = var_preview.get()
-    if not text:
-        return
-    if not messagebox.askyesno("run this?", f"run:\n{text}"):
-        return
-    subprocess.Popen(text, shell=True)
-
-
-btn_run = ttk.Button(fr_bot, text="run", style="Accent.TButton", command=run_cmd)
-btn_run.pack(side='right', padx=5)
-
-btn_copy = ttk.Button(fr_bot, text="copy", command=copy_cmd)
-btn_copy.pack(side='right', padx=5)
-
-system_theme = "dark" if darkdetect.isDark() else "light"
 sv_ttk.set_theme(system_theme)
-apply_theme_to_titlebar(root)
+apply_theme_to_titlebar(win)
 
-root.mainloop()
+win.mainloop()

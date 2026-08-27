@@ -1193,10 +1193,9 @@ class HyprSearchApp:
         ttk.Button(frame, text="Save", style="Accent.TButton", command=save_and_close).pack(fill="x")
 
     def create_icon_image(self):
-        img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(img)
-        draw.ellipse((10, 10, 40, 40), outline="#3d8bfd", width=6)
-        draw.line((36, 36, 54, 54), fill="#3d8bfd", width=6)
+        global BASEDIR
+        img = Image.open(f"{BASEDIR}/hyprsearch.png", mode="r").convert("RGBA")
+        
         icon_path = os.path.join(tempfile.gettempdir(), "hyprsearch.ico")
         img.save(icon_path, format="ICO")
         return icon_path
