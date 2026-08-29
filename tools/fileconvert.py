@@ -69,6 +69,12 @@ def apply_theme_to_titlebar(root): # copied form sv_ttk readme
         root.wm_attributes("-alpha", 1)
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "fileconvert.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("File Converter - HyprTools")
 win.geometry("360x120")
 

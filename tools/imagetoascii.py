@@ -5,6 +5,7 @@ import darkdetect #detecting the dark B)
 import pywinstyles
 import sys
 import os
+from PIL import Image, ImageDraw
 from ascii_magic import AsciiArt as art
 
 system_theme = "dark" if darkdetect.isDark() else "light"
@@ -40,6 +41,48 @@ def get_bg_color():
     return f"#{hex_val}{hex_val}{hex_val}"
 
 
+def build_ascii_image(char_data, bg_color, char_w=8, char_h=12):
+    rows = len(char_data)
+    cols = max(len(line) for line in char_data) if char_data else 0
+    img_w = cols * char_w + 4
+    img_h = rows * char_h + 4
+    pil_img = Image.new('RGB', (img_w, img_h), bg_color)
+    draw = ImageDraw.Draw(pil_img)
+    for y, line in enumerate(char_data):
+        for x, cell in enumerate(line):
+            ch = cell.get('character', ' ')
+            color_hex = cell.get('full-hex-color', '#ffffff')
+            try:
+                r = int(color_hex[1:3], 16)
+                g = int(color_hex[3:5], 16)
+                b = int(color_hex[5:7], 16)
+                color = (r, g, b)
+            except Exception:
+                color = (255, 255, 255)
+            draw.text((x * char_w + 2, y * char_h + 2), ch, fill=color)
+    return pil_img
+
+
+def char_data_to_html(char_data, bg_color):
+    lines = []
+    for line in char_data:
+        row_html = []
+        for cell in line:
+            ch = cell.get('character', ' ')
+            color_hex = cell.get('full-hex-color', '#ffffff')
+            if ch == ' ':
+                row_html.append('&nbsp;')
+            else:
+                ch_escaped = ch.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                row_html.append(f'<span style="color:{color_hex}">{ch_escaped}</span>')
+        lines.append(''.join(row_html))
+    body = '<br>'.join(lines)
+    return f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>ASCII Art</title>
+<style>body{{background:{bg_color};font-family:monospace;white-space:nowrap;line-height:1;}}</style>
+</head><body>{body}</body></html>"""
+
+# so like it just wraps ascii magic
 def convert():
     if not selected_file:
         label_5.config(text="Please select a file first.")
@@ -60,24 +103,29 @@ def convert():
 
     try:
         image = art.from_image(selected_file)
+        char_data = image.to_character_list(columns=columns, full_color=full_color, monochrome=not full_color, back=bg)#type: ignore
 
         if fmt == "png":
             save_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG", "*.png")])
             if save_path:
-                image.to_image_file(save_path, full_color=full_color, columns=columns, back=bg)
+                pil_img = build_ascii_image(char_data, bg, char_w=8, char_h=12)
+                pil_img.save(save_path)
                 label_5.config(text=f"Saved to {os.path.basename(save_path)}")
 
         elif fmt == "html":
             save_path = filedialog.asksaveasfilename(defaultextension=".html", filetypes=[("HTML", "*.html")])
             if save_path:
-                image.to_html_file(save_path, full_color=full_color, columns=columns)
+                html_content = char_data_to_html(char_data, bg)
+                with open(save_path, 'w', encoding='utf-8') as f:
+                    f.write(html_content)
                 label_5.config(text=f"Saved to {os.path.basename(save_path)}")
 
         elif fmt == "txt":
             save_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text", "*.txt")])
             if save_path:
-                with open(save_path, 'w') as f:
-                    f.write(image.to_ascii(columns=columns))
+                with open(save_path, 'w', encoding='utf-8') as f:
+                    for line in char_data:
+                        f.write(''.join(cell.get('character', ' ') for cell in line) + '\n')
                 label_5.config(text=f"Saved to {os.path.basename(save_path)}")
 
     except Exception as e:
@@ -85,6 +133,12 @@ def convert():
 
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS#type: ignore
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "imgtoascii.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.geometry('440x380')
 win.title('Image to ASCII - HyprTools')
 

@@ -43,6 +43,11 @@ def show_bsod(image_path):
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
-image_path = os.path.join(script_dir, "bsod_black.png" if is_win11 else "bsod_blue.png")
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = script_dir
+
+image_path = os.path.join(base, "bsod_black.png" if is_win11 else "bsod_blue.png")
 
 show_bsod(image_path)

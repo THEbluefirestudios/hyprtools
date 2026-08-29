@@ -197,7 +197,11 @@ class Tooltip:
 
 
 def make_tray_icon_image():
-    icon_path = os.path.join(BASEDIR, 'hyprvoice.png')
+    try:
+        base = sys._MEIPASS
+    except AttributeError:
+        base = os.path.dirname(os.path.abspath(__file__))
+    icon_path = os.path.join(base, 'hyprvoice.png')
     return Image.open(icon_path).convert('RGBA')
 
 
@@ -221,6 +225,12 @@ def run_tray():
 
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "hyprvoice.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("")
 win.geometry("220x100")
 win.resizable(False, False)

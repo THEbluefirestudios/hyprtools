@@ -7,10 +7,15 @@ import ctypes
 script_dir = os.path.dirname(os.path.abspath(__file__))
 is_win11 = sys.getwindowsversion().build >= 22000
 
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = script_dir
+
 if is_win11:
-    vido_path = os.path.join(script_dir, "win11_upd.mp4") #misspelling on urpose coz there is a different video_path= param in my func
+    vido_path = os.path.join(base, "win11_upd.mp4") #misspelling on urpose coz there is a different video_path= param in my func
 else:
-    vido_path = os.path.join(script_dir, "win10_upd.mp4")
+    vido_path = os.path.join(base, "win10_upd.mp4")
 
 def play_fake_update(video_path):
     root = tk.Tk()

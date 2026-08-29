@@ -7,12 +7,12 @@ import darkdetect
 import pyautogui as auto
 from time import sleep
 from random import randint
+import os
 
 try:
     import pywinstyles
 except ImportError:
     pywinstyles = None
-
 
 
 TYPE_SPEED = 150 
@@ -251,6 +251,12 @@ def apply_theme_to_titlebar(root):
 loadedtext = ''
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "typeghost.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("TypeGhost - HyprTools")
 win.geometry("560x340")
 

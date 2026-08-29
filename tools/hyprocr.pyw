@@ -58,6 +58,12 @@ async def ocr_image_async(pil_img):
 
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "hyprocr.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("HyprOCR - HyprTools")
 win.geometry("620x560")
 

@@ -9,7 +9,10 @@ import subprocess
 import requests
 from PIL import Image, ImageTk
 
-BASEDIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, 'frozen', False):
+    BASEDIR = os.path.dirname(sys.executable)
+else:
+    BASEDIR = os.path.dirname(os.path.abspath(__file__))
 JSONPATH = os.path.join(BASEDIR, 'hyprtools.json')# sum path stuff
 ICONDIR = os.path.join(BASEDIR, 'icons')
 
@@ -80,6 +83,12 @@ if len(sys.argv) >= 4 and sys.argv[1] == '--launch':
 data = load_data()
 # the guiiiiiiii
 root = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "webapps.png")
+root.iconphoto(True, tk.PhotoImage(file=icon_path))
 root.geometry('460x420') 
 root.title('Web Apps - Hyprtools')
 
@@ -93,7 +102,7 @@ iconcache = []
 
 
 def launch_webapp(name, url): # just pywebview
-    subprocess.Popen([sys.executable, os.path.abspath(__file__), '--launch', name, 'https://' + url])
+    subprocess.Popen([sys.executable, '--launch', name, 'https://' + url])
 
 
 def delete_webapp(entry): #tk dialogbox + remove from json + rebuild grid
@@ -101,7 +110,8 @@ def delete_webapp(entry): #tk dialogbox + remove from json + rebuild grid
     if yn:
         data['webapps'].remove(entry)
         save_data(data)
-        os.remove(entry['icon'].split('/')[-1]) # remove the icon
+        if os.path.exists(entry['icon']):
+            os.remove(entry['icon'])
         rebuild_grid()
 
 

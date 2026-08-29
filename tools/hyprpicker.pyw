@@ -178,7 +178,11 @@ def spawn_picker():
 
 
 def make_tray_icon_image():
-    icon_path = os.path.join(BASEDIR, 'hyprpicker.png')
+    try:
+        base = sys._MEIPASS
+    except AttributeError:
+        base = os.path.dirname(os.path.abspath(__file__))
+    icon_path = os.path.join(base, 'hyprpicker.png')
     return Image.open(icon_path).convert('RGBA')
 
 
@@ -217,6 +221,12 @@ def run_hotkey_listener():
 
 
 root = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "hyprpicker.png")
+root.iconphoto(True, tk.PhotoImage(file=icon_path))
 root.withdraw() 
 
 threading.Thread(target=run_hotkey_listener, daemon=True).start()

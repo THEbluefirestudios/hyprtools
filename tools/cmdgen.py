@@ -4,9 +4,9 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import sv_ttk
 import darkdetect
+import os
 
 import ctypes
-import sys
 
 def is_admin():
     try:
@@ -124,6 +124,12 @@ def apply_theme_to_titlebar(root):
 
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "cmdgen.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("Terminal Command Generator - HyprTools")
 win.geometry("880x460")
 
@@ -316,10 +322,30 @@ def run_cmd():
     if yn == True:
         try:
             result = subprocess.run(text, shell=True, cwd=os.path.expanduser('~'), capture_output=True, text=True)
-            if result.returncode != 0 or result.stderr.strip() != '':
-                messagebox.showerror("Command failed to run", result.stderr.strip() if result.stderr.strip() != '' else "Unknown error")
+            output = result.stdout if result.stdout else ''
+            err = result.stderr if result.stderr else ''
+            win_output = tk.Toplevel(win)
+            win_output.title("Command Output")
+            win_output.geometry("600x400")
+            apply_theme_to_titlebar(win_output)
+            txt = tk.Text(win_output, wrap='word', font=("Consolas", 10), padx=8, pady=8)
+            scroll = ttk.Scrollbar(win_output, orient='vertical', command=txt.yview)
+            txt.configure(yscrollcommand=scroll.set)
+            txt.pack(side='left', fill='both', expand=True)
+            scroll.pack(side='right', fill='y')
+            txt.insert('1.0', f"$ {text}\n\n")
+            if output:
+                txt.insert('end', output)
+                if not output.endswith('\n'):
+                    txt.insert('end', '\n')
+            if err:
+                txt.insert('end', '\n--- STDERR ---\n')
+                txt.insert('end', err)
+            if result.returncode != 0:
+                txt.insert('end', f"\n[Exited with code {result.returncode}]")
             else:
-                messagebox.showinfo("Command Run Sucesssful!", "\n Command run successfully!")
+                txt.insert('end', "\n[Command completed successfully]")
+            txt.configure(state='disabled')
         except Exception as e:
             messagebox.showerror("Command failed to run", str(e))
 

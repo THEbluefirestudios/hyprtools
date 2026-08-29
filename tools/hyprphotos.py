@@ -38,6 +38,12 @@ def apply_theme_to_titlebar(root):
 
 #setup main window
 win = tk.Tk()
+try:
+    base = sys._MEIPASS
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "hyprphotos.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("HyprPhotos - HyprTools")
 win.geometry("980x710")
 win.resizable(False, False)

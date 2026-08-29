@@ -1,12 +1,13 @@
 import cv2
 from ascii_magic import AsciiArt
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
 import tkinter as tk
 from tkinter import ttk
 import sv_ttk
 import darkdetect
 import pywinstyles
 import sys
+import os
 import time
 from io import BytesIO
 # so i lost the original file, so i had to rewrite it from scratch, yea im not touching it again
@@ -36,6 +37,28 @@ def get_bg_color():
     return f"#{hex_val}{hex_val}{hex_val}"
 
 
+def build_ascii_image(char_data, char_w=8, char_h=12):
+    rows = len(char_data)
+    cols = max(len(line) for line in char_data) if char_data else 0
+    img_w = cols * char_w
+    img_h = rows * char_h
+    pil_img = Image.new('RGB', (img_w, img_h), BG_COLOR)
+    draw = ImageDraw.Draw(pil_img)
+    for y, line in enumerate(char_data):
+        for x, cell in enumerate(line):
+            ch = cell.get('character', ' ')
+            color_hex = cell.get('full-hex-color', '#ffffff')
+            try:
+                r = int(color_hex[1:3], 16)
+                g = int(color_hex[3:5], 16)
+                b = int(color_hex[5:7], 16)
+                color = (r, g, b)
+            except Exception:
+                color = (255, 255, 255)
+            draw.text((x * char_w, y * char_h), ch, fill=color)
+    return pil_img
+
+
 def start_camera():
     global cap, COLUMNS, FPS, CAMERA_INDEX, BG_COLOR, FULL_COLOR
     try:
@@ -54,7 +77,7 @@ def start_camera():
     BG_COLOR = get_bg_color()
     FULL_COLOR = var_1.get()
 
-    cap = cv2.VideoCapture(CAMERA_INDEX)
+    cap = cv2.VideoCapture(CAMERA_INDEX, cv2.CAP_DSHOW)
 
     frame_settings.pack_forget()
     label_1.pack_forget()
@@ -95,11 +118,9 @@ def update():
     pil_img = Image.fromarray(frame_rgb)
 
     ascii_art = AsciiArt.from_pillow_image(pil_img)
+    char_data = ascii_art.to_character_list(columns=COLUMNS, full_color=FULL_COLOR, monochrome=not FULL_COLOR, back=BG_COLOR)#type: ignore
 
-    buf = BytesIO()
-    ascii_art.to_image_file(buf, columns=COLUMNS, full_color=FULL_COLOR, monochrome=not FULL_COLOR, back=BG_COLOR)  # type: ignore
-    buf.seek(0)
-    ascii_pil = Image.open(buf)
+    ascii_pil = build_ascii_image(char_data, char_w=8, char_h=12)
 
     win_w = frame_cam.winfo_width()
     win_h = frame_cam.winfo_height()
@@ -120,8 +141,15 @@ def on_close():
         cap.release()
     win.destroy()
 
+#yk every now and then i get deja vu, well it is justified here, coz uhh, read the topmost comment
 
 win = tk.Tk()
+try:
+    base = sys._MEIPASS #type: ignore
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "asciicam.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.title("ASCII Camera - HyprTools")
 win.geometry("440x420")
 win.protocol("WM_DELETE_WINDOW", on_close)
@@ -170,7 +198,7 @@ btn_1 = ttk.Button(frame_settings, text="Start", style='Accent.TButton', command
 btn_1.pack(pady=10)
 
 label_6 = ttk.Label(frame_settings, text="On clicking 'start', open OBS Studio, set this window as a window capture source and click 'Start Virtual Camera', now enjoy your ASCII Camera anywhere by setting camera to 'OBS virtual camera' :3", font=('Segoe UI Variable', 8), wraplength=400, foreground="#535353", justify='center')
-label_6.pack(pady=5)
+label_6.pack(pady=5)#                             ^^^tuff instruction tooltip
 
 frame_cam = ttk.Frame(win)
 label_4 = ttk.Label(frame_cam)

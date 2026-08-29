@@ -100,6 +100,7 @@ def load_setting(key, default=None):
 
 save_setting("do_engine_search", True)
 
+#yea i use minimax m3 help here, ut only after i made the logic work
 
 SEARCH_ENGINES = {
     "google": "https://www.google.com/search?q=",
@@ -682,7 +683,7 @@ def apply_theme_to_titlebar(root):
     except Exception:
         pass
 
-
+#gui consts
 RESULT_WIDTH = 760
 CORNER_RADIUS = 18
 TRANSPARENT_KEY = "#ff00fe"
@@ -703,10 +704,16 @@ ICON_MAP = {
     "info": "\U0001F4C2",
 }
 
-
+#oohh java class reference
 class HyprSearchApp:
     def __init__(self):
         self.root = tk.Tk()
+        try:
+            base = sys._MEIPASS#type: ignore
+        except AttributeError:
+            base = os.path.dirname(os.path.abspath(__file__))
+        icon_path = os.path.join(base, "hyprsearch.png")
+        self.root.iconphoto(True, tk.PhotoImage(file=icon_path))
         self.root.withdraw()
         self.root.overrideredirect(True)
         self.root.attributes("-topmost", True)
@@ -1193,8 +1200,11 @@ class HyprSearchApp:
         ttk.Button(frame, text="Save", style="Accent.TButton", command=save_and_close).pack(fill="x")
 
     def create_icon_image(self):
-        global BASEDIR
-        img = Image.open(f"{BASEDIR}/hyprsearch.png", mode="r").convert("RGBA")
+        try:
+            base = sys._MEIPASS #type: ignore
+        except AttributeError:
+            base = os.path.dirname(os.path.abspath(__file__))
+        img = Image.open(os.path.join(base, "hyprsearch.png"), mode="r").convert("RGBA")
         
         icon_path = os.path.join(tempfile.gettempdir(), "hyprsearch.ico")
         img.save(icon_path, format="ICO")

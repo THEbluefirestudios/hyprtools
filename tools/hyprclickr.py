@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import sv_ttk as sv
 import pywinstyles, sys
+import os
 
 import darkdetect
 
@@ -68,6 +69,12 @@ def auto_click():
     win.after(interval, auto_click)
 
 win = tk.Tk() 
+try:
+    base = sys._MEIPASS#type: ignore
+except AttributeError:
+    base = os.path.dirname(os.path.abspath(__file__))
+icon_path = os.path.join(base, "hyprclicker.png")
+win.iconphoto(True, tk.PhotoImage(file=icon_path))
 win.geometry('380x220')
 win.title('HyprClickr - HyprTools')
 
