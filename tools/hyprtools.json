@@ -16,5 +16,8 @@
         "E:\\"
     ],
     "search_engine": "duckduckgo",
-    "do_engine_search": true
+    "do_engine_search": true,
+    "startup_hyprsearch": false,
+    "startup_hyprpicker": false,
+    "startup_hyprvoice": false
 }

@@ -19,7 +19,7 @@ import re
 
 import json
 import string
-import sys
+import sys #ooo giant import bloxk
 import tempfile
 import threading
 import queue
@@ -40,14 +40,14 @@ user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
 user32.SetForegroundWindow.argtypes = [ctypes.c_void_p]
 user32.BringWindowToTop.argtypes = [ctypes.c_void_p]
-user32.GetForegroundWindow.restype = ctypes.c_void_p
+user32.GetForegroundWindow.restype = ctypes.c_void_p  #yea tys uses a lot of ctypes
 user32.GetWindowThreadProcessId.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 user32.GetWindowThreadProcessId.restype = ctypes.c_uint32
 user32.AttachThreadInput.argtypes = [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_int]
 kernel32.GetCurrentThreadId.restype = ctypes.c_uint32
 
 
-def load_start_apps():
+def load_start_apps(): # i was using appopener but it didnt support uwp apps and apps on other drives
     apps = {}
     try:
         result = subprocess.run(
@@ -74,7 +74,7 @@ BASEDIR = os.path.dirname(os.path.abspath(__file__))
 HYPRTOOLS_JSON = os.path.join(BASEDIR, 'hyprtools.json')
 
 
-def save_setting(key, value):
+def save_setting(key, value): #same save and load json funcs
     data = {}
     if os.path.exists(HYPRTOOLS_JSON):
         try:
@@ -103,15 +103,17 @@ save_setting("do_engine_search", True)
 #yea i use minimax m3 help here, ut only after i made the logic work
 
 SEARCH_ENGINES = {
-    "google": "https://www.google.com/search?q=",
+    
     "qwant": "https://www.qwant.com/?q=",
-    "duckduckgo": "https://duckduckgo.com/?q=",
+    "duckduckgo": "https://duckduckgo.com/?q=", # THE GOATED search engines
     "ecosia": "https://www.ecosia.org/search?q=",
     "kagi": "https://kagi.com/search?q=",
+
+    "google": "https://www.google.com/search?q=",
     "bing": "https://www.bing.com/search?q=",
     "brave": "https://search.brave.com/search?q=",
     "startpage": "https://www.startpage.com/sp/search?query=",
-    "yahoo": "https://search.yahoo.com/search?p=",
+    "yahoo": "https://search.yahoo.com/search?p=",  # ehh search engines
     "yandex": "https://yandex.com/search/?text=",
     "baidu": "https://www.baidu.com/s?wd=",
     "wolframalpha": "https://www.wolframalpha.com/input?i=",
@@ -119,21 +121,21 @@ SEARCH_ENGINES = {
 
 DO_ENGINESEARCH = load_setting("do_engine_search", default=True)
 bangs = [
-    '!open',
-    '!app',
-    '!web',
-    '!searchweb',
-    '!file',
-    '!wiki',
-    '!time',
-    '!install',
-    '!math',
-    '!cmd',
+    '!open',#opnes app or website
+    '!app',#opnes app
+    '!web',#opnes website
+    '!searchweb',#web search by engine
+    '!file',#searches for files on pc
+    '!wiki',#fetches wikipedia summary
+    '!time',#tells current time (USELESS)
+    '!install',#winget install... u get it
+    '!math',#uses eval for math, with a filter so that it only works for math expressions
+    '!cmd',#run cmd command, i reccomend cmdgen for this tho
 ]
 
 username = os.getenv("USERNAME") or os.getenv("USER")
 
-TERMINAL_KEYWORDS = [
+TERMINAL_KEYWORDS = [ #bunch o keywords, i just brainstormed as many as i knew
     "cd", "dir", "ls", "cls", "clear", "echo", "type", "cat", "copy", "cp",
     "move", "mv", "del", "rm", "mkdir", "md", "rmdir", "rd", "ren", "rename",
     "attrib", "tree", "find", "findstr", "grep", "where", "which",
@@ -146,7 +148,7 @@ TERMINAL_KEYWORDS = [
     "yt-dlp", "youtube-dl", "aria2c", "aria2", "rsync", "tar", "zip", "unzip", "7z", "7za", "7zr",
 ]
 
-FILE_EXTENSIONS = {
+FILE_EXTENSIONS = {#ye same  here
     "txt", "doc", "docx", "pdf", "rtf", "odt", "md", "tex", "wpd", "log",
     "xlsx", "xls", "csv", "tsv", "ods", "json", "xml", "yaml", "yml", "toml",
     "pptx", "ppt", "odp", "key",
@@ -169,14 +171,14 @@ FILE_EXTENSIONS = {
 }
 
 
-save_setting("search_engine", "duckduckgo")
+save_setting("search_engine", "duckduckgo") #cmon duckduckgo GOATED
 
 SEARCHENGINE = load_setting("search_engine", default="duckduckgo")
 
 SEARCHDIRS = [
     f"C:\\Users\\{username}",
     f"C:\\Users\\Public\\Public Documents",
-    f"C:\\Users\\Public\\Public Downloads",
+    f"C:\\Users\\Public\\Public Downloads", #IF U KEEP UR SHI IN... SYSTEM32 FOLER I WILL FIND U
     f"C:\\Users\\Public\\Public Music",
     f"C:\\Users\\Public\\Public Videos",
     f"C:\\Users\\Public\\Public Pictures",
@@ -186,12 +188,12 @@ SEARCHDIRS = [
 for letter in string.ascii_uppercase:
     if letter == "C":
         continue
-    drive = f"{letter}:\\"
+    drive = f"{letter}:\\" #extra driveletters in case if any
     if os.path.exists(drive):
         SEARCHDIRS.append(drive)
 
 
-def save_search_dirs(search_dirs):
+def save_search_dirs(search_dirs): 
     data = {}
     if os.path.exists(HYPRTOOLS_JSON):
         try:
@@ -214,7 +216,7 @@ def is_terminal_command(text):
     first_word = text.strip().split()[0].lower()
     return first_word in TERMINAL_KEYWORDS
 
-MATH_CHARS = set("0123456789+-*/^%().")
+MATH_CHARS = set("0123456789+-*/^%().")# see i told u i did some filtering for the math expression
 
 def is_math_expression(text):
     if not text or not text.strip():
@@ -231,12 +233,12 @@ def looks_like_filename(text):
     match = re.search(r"\.(\w+)$", text)
     return match is not None and match.group(1).lower() in FILE_EXTENSIONS
 
-wikipedia.set_user_agent("hyprsearch/1.0 (https://github.com/THEbluefirestudios/hyprtools/issues)")
+wikipedia.set_user_agent("hyprsearch/1.0 (https://github.com/THEbluefirestudios/hyprtools/issues)")#real header
 
 def starts_with(string1, string2):
     return string2.lower().startswith(string1.lower())
 
-def find_best_app_match(query, threshold=0.72):
+def find_best_app_match(query, threshold=0.72): #fuzzymatching app anmes, so like whutsipp will return whatsapp
     if not STARTAPPS or not query:
         return None
     query_l = query.lower().strip()
@@ -265,7 +267,7 @@ def math_solve(expression):
     except Exception as e:
         return f"{str(e)}"
 
-def resolve_website(user_input, timeout=3):
+def resolve_website(user_input, timeout=3): #my magnum opus, uses im feeling lucky to get website
     query = user_input.strip()
     try:
         r = requests.get(
