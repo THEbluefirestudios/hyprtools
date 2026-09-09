@@ -59,7 +59,7 @@ The only one you need to care about is [VLC Media Player](https://www.videolan.o
 # Tools overview
 
 ### Repair and cleanup
-- **Fix my PC** : one-click SFC & DISM scan/repair for common Windows corruption issues
+- **Fix my PC** : one-click SFC & DISM scan/repair for common Windows corruption issues, then restart your PC to apply
 - **PC Cache Cleanser** : clears temp files, junk, and cache to free up space
 - **Wi-Fi Cache Cleanser** : flushes DNS/Wi-Fi cache to fix connectivity hiccups
 - **Update All Apps & Drivers** : one-click check and update for installed apps and drivers
@@ -86,6 +86,17 @@ The only one you need to care about is [VLC Media Player](https://www.videolan.o
 - **Image to ASCII Art** : convert any image into ASCII art
 - **Webcam to ASCII Art** : turn your webcam feed into live ASCII art, usable in Meet, Zoom, or while streaming
 - **Fake Windows Update/Error Screen** : prank screen mimicking a Windows update or error
+
+# FAQ
+- **Why is it saying that I do not have VLC installed when I do?**
+
+  It is because you have the 32-bit version. Please delete it and install the 64-bit version
+- **What are the full list of dependencies?**
+
+  Well, `Python 3.9+`, `winget`, `VLC Media Player x86-64`, `Windows OCR Engine`, `ffmpeg.exe` and the python libraries.
+- **Why didn't 'Fix my PC' fix anything?**
+
+  Try restarting your PC for changes to apply, If still its broke, it means the issue was not with the core Windows files but something else, as 'Fix my PC' only targets those files and checks their integrity
 
 # Credits
 - My friend, [@AarshGarg2011Code](https://github.com/AarshGarg2011Code) for the code for the file organiser!
