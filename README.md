@@ -1,12 +1,23 @@
-# HyprTools <\>
+
+# HyprTools 
 ### Welcome to HyprTools!
+
+
 [![Release](https://img.shields.io/github/v/release/THEbluefirestudios/hyprtools?style=flat-square&color=blue)](https://github.com/USERNAME/HyprTools/releases)
 [![Downloads](https://img.shields.io/github/downloads/THEbluefirestudios/hyprtools/total?style=flat-square&color=brightgreen)](https://github.com/USERNAME/HyprTools/releases)
 [![License](https://img.shields.io/github/license/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/USERNAME/HyprTools/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/USERNAME/HyprTools)
 [![Issues](https://img.shields.io/github/issues/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/USERNAME/HyprTools/issues)
 
-<img width="1328" height="614" alt="image" src="https://github.com/user-attachments/assets/7f3c3425-f63e-407a-b194-6088003dc3ad" />
+<div align="center">
+   <img width="200" height="200" alt="hyprtools" src="https://github.com/user-attachments/assets/ebd8dcaa-4813-4f8a-be81-91d97f246385" align="center"/>
+</div>
+
+---
+
+<div align="center">
+   <img width="1328" height="614" alt="image" src="https://github.com/user-attachments/assets/7f3c3425-f63e-407a-b194-6088003dc3ad" />
+</div>   
 
 
 ---
@@ -53,7 +64,7 @@ HyprTools is an open-source suite of tools for the average PC user, for windows 
 
 Well, there are some, almost all are them are bundled in !
 
-The only one you need to care about is [VLC Media Player](https://www.videolan.org/vlc/)!
+The only ones you need to care about are [VLC Media Player](https://www.videolan.org/vlc/) for the fake update screen and [OBS Studio](https://obsproject.com/download) for ASCIICam!
 
 
 # Tools overview
@@ -93,7 +104,7 @@ The only one you need to care about is [VLC Media Player](https://www.videolan.o
   It is because you have the 32-bit version. Please delete it and install the 64-bit version
 - **What are the full list of dependencies?**
 
-  Well, `Python 3.9+`, `winget`, `VLC Media Player x86-64`, `Windows OCR Engine`, `ffmpeg.exe` and the python libraries.
+  Well, `Python 3.9+`, `winget`, `VLC Media Player x86-64`, `Windows OCR Engine`, `ffmpeg.exe`. `OBS Studio` and the python libraries.
 - **Why didn't 'Fix my PC' fix anything?**
 
   Try restarting your PC for changes to apply, If still its broke, it means the issue was not with the core Windows files but something else, as 'Fix my PC' only targets those files and checks their integrity
