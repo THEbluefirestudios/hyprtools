@@ -3,11 +3,11 @@
 ### Welcome to HyprTools!
 
 
-[![Release](https://img.shields.io/github/v/release/THEbluefirestudios/hyprtools?style=flat-square&color=blue)](https://github.com/USERNAME/HyprTools/releases)
-[![Downloads](https://img.shields.io/github/downloads/THEbluefirestudios/hyprtools/total?style=flat-square&color=brightgreen)](https://github.com/USERNAME/HyprTools/releases)
-[![License](https://img.shields.io/github/license/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/USERNAME/HyprTools/blob/main/LICENSE)
-[![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/USERNAME/HyprTools)
-[![Issues](https://img.shields.io/github/issues/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/USERNAME/HyprTools/issues)
+[![Release](https://img.shields.io/github/v/release/THEbluefirestudios/hyprtools?style=flat-square&color=blue)](https://github.com/THEbluefirestudios/hyprtools/releases)
+[![Downloads](https://img.shields.io/github/downloads/THEbluefirestudios/hyprtools/total?style=flat-square&color=brightgreen)](https://github.com/THEbluefirestudios/hyprtools/releases)
+[![License](https://img.shields.io/github/license/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/THEbluefirestudios/hyprtools/blob/main/LICENSE)
+[![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square&logo=windows&logoColor=white)](https://github.com/THEbluefirestudios/hyprtools)
+[![Issues](https://img.shields.io/github/issues/THEbluefirestudios/hyprtools?style=flat-square)](https://github.com/THEbluefirestudios/hyprtools/issues)
 
 <div align="center">
    <img width="200" height="200" alt="hyprtools" src="https://github.com/user-attachments/assets/ebd8dcaa-4813-4f8a-be81-91d97f246385" align="center"/>
