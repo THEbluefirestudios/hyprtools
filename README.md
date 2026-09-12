@@ -16,7 +16,8 @@
 ---
 
 <div align="center">
-   <img width="1328" height="614" alt="image" src="https://github.com/user-attachments/assets/7f3c3425-f63e-407a-b194-6088003dc3ad" />
+   <img width="1328" height="614" alt="Banner for HyprTools" src="https://github.com/user-attachments/assets/2a6569d8-f983-4369-bd34-30bbcc3ae3f4" />
+
 </div>   
 
 
